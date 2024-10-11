@@ -18,7 +18,11 @@ import { useDialog } from "@/store/store";
 import { Box } from "@/shared/components/containers/Box";
 import { DialogClose } from "@/components/ui/dialog";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  objectToQueryParams,
+  useGetQueryParams,
+} from "@/shared/hooks/use-get-query-params";
 
 interface CharacterFormProps {
   characterId?: number;
@@ -28,7 +32,14 @@ export const CharacterForm: FC<CharacterFormProps> = ({
   characterId,
 }): JSX.Element => {
   const path = usePathname();
+  const router = useRouter();
   const dialog = useDialog();
+  const query = useGetQueryParams();
+  const qry = { ...query };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id: NewId, ...rest } = qry;
+
   const isUpdate = !!characterId;
   const [showComp, setShowComp] = useState<boolean>(false);
 
@@ -83,6 +94,12 @@ export const CharacterForm: FC<CharacterFormProps> = ({
       });
     }
 
+    router.push(
+      `${path}?${objectToQueryParams({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ...(isUpdate ? rest : qry),
+      })}`
+    );
     dialog.handleCreateCharacterDialog();
   };
 
@@ -138,6 +155,13 @@ export const CharacterForm: FC<CharacterFormProps> = ({
         />
         <Box className="flex justify-center gap-4 w-full">
           <Button className="bg-lime-700" type="submit">
+            {/* <Link
+              href={{
+                pathname: path,
+                query: rest,
+              }}
+            >
+            </Link> */}
             {buttonText}
           </Button>
           <DialogClose>
@@ -146,7 +170,7 @@ export const CharacterForm: FC<CharacterFormProps> = ({
               <Link
                 href={{
                   pathname: path,
-                  query: null,
+                  query: qry,
                 }}
                 onClick={() => {
                   dialog.handleCreateCharacterDialog();

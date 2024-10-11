@@ -22,7 +22,7 @@ export type TableBodyType<T> = T;
 
 interface TableProps {
   head: TableHeadType[];
-
+  loading: boolean;
   // eslint-disable-next-line
   data: any[];
   footerDescription?: string;
@@ -95,12 +95,12 @@ export function Table({ footerDescription, head = [], data = [] }: TableProps) {
 
   return (
     <Box className="">
-      <TableLib className="">
+      <TableLib className="min-h-[420px]">
         {tableDescription}
         <TableHeader className="">
           <TableRow className="overflow-auto sticky">{tableHead}</TableRow>
         </TableHeader>
-        <TableBody className="">{tableBody}</TableBody>
+        <TableBody className="relative ">{tableBody}</TableBody>
       </TableLib>
     </Box>
   );
