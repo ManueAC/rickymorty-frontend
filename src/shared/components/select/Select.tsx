@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Box } from "../containers/Box";
 import { capitalize } from "lodash";
 
-type SelectOption = {
+export type SelectOption = {
   label: string;
   value: string;
 };
@@ -28,9 +28,9 @@ export const Select: React.FC<SelectProps> = ({
   label,
   formatLabel = true,
 }) => {
-  const mapOptions = options.map((options) => {
+  const mapOptions = options.map((options, idx) => {
     const labelText = formatLabel ? capitalize(options.label) : options.label;
-    return <SelectItem value={options.value}>{labelText}</SelectItem>;
+    return <SelectItem key={idx} value={options.value}>{labelText}</SelectItem>;
   });
   return (
     <SelectLib>

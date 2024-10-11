@@ -1,5 +1,6 @@
+// 'use server';
 import { CharactersView } from "@/modules/characters/CharactersView";
 
-export default function characters() {
+export default /* async  */function characters() {
   return <CharactersView />;
 }
