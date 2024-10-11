@@ -18,7 +18,21 @@ export const CharactersTable = (): JSX.Element => {
   }));
 
   const characters = store.characters.results;
+  const paginate = (
+    // array: Array<Record<string, string | number>>,
+    array: CharacterType[],
+    pageSize: number,
+    pageNumber: number
+  ) => {
+    // Calcula el índice de inicio
+    const startIndex = (pageNumber - 1) * pageSize;
 
+    // Extrae la porción del array
+    return array.slice(startIndex, startIndex + pageSize);
+  };
+  console.log("====================================");
+  console.log("paginate", paginate(characters, characters?.length, 1));
+  console.log("====================================");
   const mapBodyRow: CharacterType[] =
     characters?.length > 0
       ? characters?.map((char) => ({
