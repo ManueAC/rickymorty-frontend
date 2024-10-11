@@ -16,6 +16,7 @@ import { toast } from "@/hooks/use-toast";
 import { Box } from "@/shared/components/containers/Box";
 import { useLocalStorage } from "@/shared/hooks/use-local-storage";
 import { useDialog } from "@/store/store";
+import { useGetQueryParams } from "@/shared/hooks/use-get-query-params";
 
 export type ApiCharacterResponse = {
   info: {
@@ -31,6 +32,12 @@ export type ApiCharacterResponse = {
 export const DeleteCharactersModal = (): JSX.Element => {
   const dialog = useDialog((state) => state);
   const params = useSearchParams();
+  const query = useGetQueryParams();
+  const qry = { ...query };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id: NewId, ...rest } = qry;
+
   const { removeData } = useLocalStorage("characters");
 
   const path = usePathname();
@@ -64,7 +71,7 @@ export const DeleteCharactersModal = (): JSX.Element => {
             <Link
               href={{
                 pathname: path,
-                query: null,
+                query: rest,
               }}
             >
               Delete
@@ -75,7 +82,7 @@ export const DeleteCharactersModal = (): JSX.Element => {
               <Link
                 href={{
                   pathname: path,
-                  query: null,
+                  query: qry,
                 }}
                 onClick={() => {
                   dialog.handleCharDeleteDialog();
