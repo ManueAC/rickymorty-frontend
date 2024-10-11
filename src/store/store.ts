@@ -111,11 +111,13 @@ export type DialogStoreType = {
   openSyncDialog: boolean;
   openCreateCharacterDialog: boolean;
   openCharacterFilters: boolean;
+  openDeleteCharacter: boolean;
 };
 export type DialogStoreActions = {
   handleSyncDialog: () => void;
   handleCreateCharacterDialog: () => void;
   handleCharacterFilterDialog: () => void;
+  handleCharDeleteDialog: () => void;
 };
 
 export const useDialog = create<DialogStoreType & DialogStoreActions>(
@@ -123,6 +125,7 @@ export const useDialog = create<DialogStoreType & DialogStoreActions>(
     openSyncDialog: false,
     openCreateCharacterDialog: false,
     openCharacterFilters: false,
+    openDeleteCharacter: false,
 
     handleSyncDialog: () => {
       return set((state) => ({
@@ -137,6 +140,11 @@ export const useDialog = create<DialogStoreType & DialogStoreActions>(
     handleCharacterFilterDialog: () => {
       return set((state) => ({
         openCharacterFilters: !state.openCharacterFilters,
+      }));
+    },
+    handleCharDeleteDialog: () => {
+      return set((state) => ({
+        openDeleteCharacter: !state.openDeleteCharacter,
       }));
     },
   })

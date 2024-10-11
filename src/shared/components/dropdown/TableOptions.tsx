@@ -11,6 +11,7 @@ import { Menu } from "lucide-react";
 import { FC } from "react";
 import { useDialog } from "@/store/store";
 import { usePathname, useRouter } from "next/navigation";
+import { capitalize } from "lodash";
 
 export type TableOption = {
   label: string;
@@ -25,11 +26,12 @@ export const TableOptions: FC<TableOptionsProps> = ({ options }) => {
   const dialog = useDialog();
   const router = useRouter();
   const pathname = usePathname();
-
+  
   const handleDialog = {
     openSyncDialog: dialog.handleSyncDialog,
     openCreateCharacterDialog: dialog.handleCreateCharacterDialog,
     openCharacterFilters: dialog.handleCharacterFilterDialog,
+    openDeleteCharDialog: dialog.handleCharDeleteDialog
   };
   return (
     <DropdownMenu>
@@ -52,7 +54,7 @@ export const TableOptions: FC<TableOptionsProps> = ({ options }) => {
                   }, 300);
                 }}
               >
-                {label}
+                {capitalize(label)}
               </DropdownMenuItem>
             );
           })}

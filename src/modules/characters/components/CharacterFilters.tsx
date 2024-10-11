@@ -60,7 +60,7 @@ export const CharacterFilters = (): JSX.Element | null => {
           <FormSelectBase
             entity="Species"
             control={control}
-            label={"Species"}
+            label={"Type"}
             name={"species"}
             form={form}
             options={speciesOptions}
