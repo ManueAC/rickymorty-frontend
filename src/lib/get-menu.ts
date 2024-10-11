@@ -1,4 +1,9 @@
-import { LogInIcon, LucideIcon, PersonStanding, Presentation } from "lucide-react";
+import {
+  LogInIcon,
+  LucideIcon,
+  PersonStanding,
+  Presentation,
+} from "lucide-react";
 
 type MenuList = {
   href: string;
@@ -9,12 +14,12 @@ type MenuList = {
 
 export const getMenu = (pathname: string): MenuList[] => {
   return [
-    {
-      icon: LogInIcon,
-      label: "Log In",
-      href: "/login",
-      active: pathname.includes("/login"),
-    },
+    // {
+    //   icon: LogInIcon,
+    //   label: "Log In",
+    //   href: "/login",
+    //   active: pathname.includes("/login"),
+    // },
     {
       icon: PersonStanding,
       label: "Characters",
@@ -27,11 +32,5 @@ export const getMenu = (pathname: string): MenuList[] => {
       href: "/episodes",
       active: pathname.includes("/episodes"),
     },
-    // {
-    //   icon: PersonStanding,
-    //   label: "Characters",
-    //   href: "/characters",
-    //   active: pathname.includes("/characters"),
-    // },
   ];
 };

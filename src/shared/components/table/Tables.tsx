@@ -1,3 +1,4 @@
+"use client";
 import {
   Table as TableLib,
   TableBody,
@@ -10,23 +11,24 @@ import {
 import { cn } from "@/lib/utils";
 import React, { FC } from "react";
 import { TableOptions } from "../dropdown/TableOptions";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { Box } from "../containers/Box";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
-type TableHeadType = {
+export type TableHeadType = {
   label: string;
 };
 
-type TableBodyType = {};
+export type TableBodyType<T> = T;
 
-interface TableProps {
+interface TableProps /* <T> */ {
   head: TableHeadType[];
-  data: TableBodyType[];
+  data: any[];
   footerDescription?: string;
 }
-export const Table: FC<TableProps> = ({
-  footerDescription,
-  head = [],
-  data = [],
-}) => {
+export function Table /* <T> */(
+  { footerDescription, head = [], data = [] }: TableProps /* <T> */
+) {
   const tableDescription = footerDescription && (
     <TableCaption>{footerDescription}</TableCaption>
   );
@@ -38,7 +40,8 @@ export const Table: FC<TableProps> = ({
             key={`${headItem.label}-${idx}`}
             className={cn(
               idx === 0 && "w-[100px]",
-              idx === head.length - 1 && "text-right"
+              idx === head.length - 1 && "text-right",
+              "sticky"
             )}
           >
             {headItem.label}
@@ -49,24 +52,29 @@ export const Table: FC<TableProps> = ({
   const tableBody =
     data.length > 0
       ? data.map((b, idx) => {
-          const entries = Object.entries(b);
+          const entries = Object.entries(b as any);
 
           const content = entries.map(([k, v], entryIdx) => {
             const align = cn(entryIdx === entries.length - 1 && "text-right");
             const i = v as Array<Record<string, any>>;
             let content = v;
-
+            if (k === "id") return;
+            if (k === "image") {
+              content = (
+                <Avatar>
+                  <AvatarImage src={String(v)} alt={k} />
+                </Avatar>
+              );
+            }
             if (k === "actions" && i?.length > 0) {
-              //   content = i.map((iconAction, idx) => (
-              //     <span key={idx}>{iconAction.component}</span>
-              //   ));
               content = (
                 <>
                   {
                     <TableOptions
                       options={i?.map((trebt) => ({
                         label: trebt.label,
-                        action: trebt.action,
+                        query: trebt.query,
+                        data: b,
                       }))}
                     />
                   }
@@ -85,14 +93,17 @@ export const Table: FC<TableProps> = ({
       : null;
 
   return (
-    <TableLib>
-      {tableDescription}
-
-      <TableHeader>
-        <TableRow>{tableHead}</TableRow>
-      </TableHeader>
-
-      <TableBody>{tableBody}</TableBody>
-    </TableLib>
+    <Box className="">
+      <TableLib className="">
+        {tableDescription}
+        <TableHeader className="">
+          <TableRow className="overflow-auto sticky">{tableHead}</TableRow>
+        </TableHeader>
+        <TableBody className="">
+          {/* <ScrollArea>{tableBody}</ScrollArea> */}
+          {tableBody}
+        </TableBody>
+      </TableLib>
+    </Box>
   );
-};
+}
