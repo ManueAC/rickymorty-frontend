@@ -13,10 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CharacterSchemaType } from "@/modules/characters/characters-types";
 import { Control, FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { SelectOption } from "../select/Select";
-import { useState } from "react";
 
 interface BaseFormProps<T extends FieldValues> {
   label: string;
@@ -78,14 +76,13 @@ export function FormSelectBase<T extends FieldValues>({
   control,
   placeholder,
   name,
-  showComp = true /* = true, */,
+  showComp = true,
   valueAsPh,
   options,
 }: FormSelectBase<T>) {
-  const [val, setVal] = useState<string>();
-
   const ph =
     name && entity ? `Select a ${name}` : placeholder ? placeholder : "";
+
   return (
     <div className="mb-5">
       <FormField
@@ -107,7 +104,6 @@ export function FormSelectBase<T extends FieldValues>({
                       {showComp && (
                         <SelectValue
                           defaultValue={field?.value}
-                          //   aria-label={field?.value}
                           placeholder={valueAsPh ? field?.value : ph}
                         />
                       )}

@@ -20,6 +20,7 @@ export type ApiCharacterResponse = {
     next: string;
     prev: string;
   };
+  // eslint-disable-next-line
   results: Record<string, any>[];
 };
 

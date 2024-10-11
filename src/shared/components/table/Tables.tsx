@@ -9,9 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import React, { FC } from "react";
+import React from "react";
 import { TableOptions } from "../dropdown/TableOptions";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Box } from "../containers/Box";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
@@ -21,14 +20,14 @@ export type TableHeadType = {
 
 export type TableBodyType<T> = T;
 
-interface TableProps /* <T> */ {
+interface TableProps {
   head: TableHeadType[];
+
+  // eslint-disable-next-line
   data: any[];
   footerDescription?: string;
 }
-export function Table /* <T> */(
-  { footerDescription, head = [], data = [] }: TableProps /* <T> */
-) {
+export function Table({ footerDescription, head = [], data = [] }: TableProps) {
   const tableDescription = footerDescription && (
     <TableCaption>{footerDescription}</TableCaption>
   );
@@ -52,10 +51,12 @@ export function Table /* <T> */(
   const tableBody =
     data.length > 0
       ? data.map((b, idx) => {
+          // eslint-disable-next-line
           const entries = Object.entries(b as any);
 
           const content = entries.map(([k, v], entryIdx) => {
             const align = cn(entryIdx === entries.length - 1 && "text-right");
+            // eslint-disable-next-line
             const i = v as Array<Record<string, any>>;
             let content = v;
             if (k === "id") return;
@@ -99,10 +100,7 @@ export function Table /* <T> */(
         <TableHeader className="">
           <TableRow className="overflow-auto sticky">{tableHead}</TableRow>
         </TableHeader>
-        <TableBody className="">
-          {/* <ScrollArea>{tableBody}</ScrollArea> */}
-          {tableBody}
-        </TableBody>
+        <TableBody className="">{tableBody}</TableBody>
       </TableLib>
     </Box>
   );

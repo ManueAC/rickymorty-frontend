@@ -1,4 +1,4 @@
 export const EpisodesView = () => {
-    return <div>EPI</div>;
+    return <div>Work in progress... Come back soon!</div>;
   };
   

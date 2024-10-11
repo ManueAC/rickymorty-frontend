@@ -45,6 +45,7 @@ export const CharacterForm: FC<CharacterFormProps> = ({
       setShowComp(true);
     }, 500);
     return () => clearTimeout(clear);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = (values: CharacterSchemaType) => {

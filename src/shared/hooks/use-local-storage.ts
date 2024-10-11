@@ -36,9 +36,7 @@ export const useLocalStorage = (
     data: Record<string, unknown>
   ) => {
     const previous = JSON.parse(String(localStorage.getItem(String(dataName))));
-    const item = previous.results.find(
-      (monigote: CharacterType) => monigote?.id === id
-    );
+
     const e = previous.results.filter((pr: CharacterType) => pr?.id !== id);
     localStorage.setItem(
       key,
@@ -71,6 +69,7 @@ export const useLocalStorage = (
       setDataAll("characters", data);
     };
     makeCall();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refresh = () => {

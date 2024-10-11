@@ -4,7 +4,6 @@ import { MainTitle } from "../Typography";
 import { Box } from "./Box";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
 import { useDialog } from "@/store/store";
 
 type LayoutAction = {
@@ -24,10 +23,8 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
   actions = [],
   children,
 }): JSX.Element => {
-  const params = useSearchParams();
   const dialog = useDialog((state) => state);
 
-  const fn = () => {};
   const handleDialog = {
     openSyncDialog: dialog.handleSyncDialog,
     openCreateCharacterDialog: dialog.handleCreateCharacterDialog,
@@ -35,7 +32,7 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
   };
   const layoutButtons = (
     <Box className="flex gap-3">
-      {actions.map(({ label, color, query = "", action }, idx) => {
+      {actions.map(({ label, query = "" }, idx) => {
         const k = query as keyof typeof handleDialog;
         return (
           <Button
