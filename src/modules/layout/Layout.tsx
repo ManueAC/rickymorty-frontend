@@ -6,6 +6,7 @@ import { Topbar } from "./components/Topbar";
 import { usePathname, useRouter } from "next/navigation";
 import { Box } from "@/shared/components/containers/Box";
 import { Loader } from "lucide-react";
+import { Toaster } from "@/components/ui/toaster";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -35,6 +36,7 @@ export const Layout: FC<LayoutProps> = ({ children }): JSX.Element => {
       <div className="w-full">
         <Topbar />
         <main className="w-full bg-popover p-8">{children}</main>
+        <Toaster />
       </div>
     </div>
   );

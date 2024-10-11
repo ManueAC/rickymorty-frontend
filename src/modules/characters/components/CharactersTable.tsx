@@ -46,7 +46,7 @@ export const CharactersTable = (): JSX.Element => {
       <Table
         head={mapHeadLabels}
         data={mapBodyRow}
-        footerDescription="A list of your recent invoices."
+        footerDescription="A list of your characters invoices."
       />
     </Box>
   );

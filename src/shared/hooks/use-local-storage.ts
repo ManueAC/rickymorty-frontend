@@ -10,7 +10,7 @@ export const useLocalStorage = (
   updateData: (key: string, id: number, data: Record<string, unknown>) => void;
   setData: (key: string, data: Record<string, unknown>) => void;
   setDataAll: (key: string, data: Record<string, unknown>) => void;
-  removeData: (key: string) => void;
+  removeData: (key: string, id: number) => void;
   setToken: (key: string, data: string) => void;
   storage: ApiCharacterResponse;
 } => {
@@ -30,6 +30,21 @@ export const useLocalStorage = (
     localStorage.setItem(key, JSON.stringify(data));
     updateState();
   };
+
+  const removeData = (key: string, id: number) => {
+    const previous = JSON.parse(String(localStorage.getItem(String(dataName))));
+    const e = previous.results.filter((pr: CharacterType) => pr?.id !== id);
+
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        info: previous.info,
+        results: [...e],
+      })
+    );
+    updateState();
+  };
+
   const updateData = (
     key: string,
     id: number,
@@ -42,7 +57,7 @@ export const useLocalStorage = (
       key,
       JSON.stringify({
         info: previous.info,
-        results: [...e, data],
+        results: [data, ...e],
       })
     );
     updateState();
@@ -54,21 +69,27 @@ export const useLocalStorage = (
       key,
       JSON.stringify({
         info: previous.info,
-        results: [...previous.results, data],
+        results: [data, ...previous.results],
       })
     );
-  };
 
-  const removeData = (key: string) => {
-    localStorage.removeItem(key);
+    updateState();
   };
 
   useEffect(() => {
-    const makeCall = async () => {
-      const data = await fetchAPI(API_ENTITY_ENUM.character);
-      setDataAll("characters", data);
-    };
-    makeCall();
+    const previous = JSON.parse(String(localStorage.getItem(String(dataName))));
+    const isDataAvailable = previous?.results?.length > 0;
+    console.log("====================================");
+    console.log("INTITAL SETTING");
+    console.log("INTITAL PREV DATA ?", previous?.results?.length > 0);
+    console.log("====================================");
+    if (!isDataAvailable) {
+      const makeCall = async () => {
+        const data = await fetchAPI(API_ENTITY_ENUM.character);
+        setDataAll("characters", data);
+      };
+      makeCall();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

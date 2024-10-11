@@ -6,6 +6,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { SyncCharactersModal } from "./components/SyncCharactersModal";
 import { CharactersTable } from "./components/CharactersTable";
 import { CharacterFilters } from "./components/CharacterFilters";
+import { DeleteCharactersModal } from "./components/DeleteCharModal";
 
 export type CharType = {
   id: string;
@@ -40,6 +41,7 @@ export const CharactersView = () => {
         </Box>
         <CreateUserModal />
         <SyncCharactersModal />
+        <DeleteCharactersModal />
       </BaseLayout>
     </Dialog>
   );
