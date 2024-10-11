@@ -12,6 +12,10 @@ import { FC } from "react";
 import { useDialog } from "@/store/store";
 import { usePathname, useRouter } from "next/navigation";
 import { capitalize } from "lodash";
+import {
+  objectToQueryParams,
+  useGetQueryParams,
+} from "@/shared/hooks/use-get-query-params";
 
 export type TableOption = {
   label: string;
@@ -26,12 +30,14 @@ export const TableOptions: FC<TableOptionsProps> = ({ options }) => {
   const dialog = useDialog();
   const router = useRouter();
   const pathname = usePathname();
-  
+  const query = useGetQueryParams();
+  const qry = { ...query };
+
   const handleDialog = {
     openSyncDialog: dialog.handleSyncDialog,
     openCreateCharacterDialog: dialog.handleCreateCharacterDialog,
     openCharacterFilters: dialog.handleCharacterFilterDialog,
-    openDeleteCharDialog: dialog.handleCharDeleteDialog
+    openDeleteCharDialog: dialog.handleCharDeleteDialog,
   };
   return (
     <DropdownMenu>
@@ -48,7 +54,12 @@ export const TableOptions: FC<TableOptionsProps> = ({ options }) => {
               <DropdownMenuItem
                 key={key}
                 onClick={() => {
-                  router.push(`${pathname}?id=${data.id}`);
+                  router.push(
+                    `${pathname}?${objectToQueryParams({
+                      ...qry,
+                      id: data.id,
+                    })}`
+                  );
                   setTimeout(() => {
                     handleDialog[k]();
                   }, 300);

@@ -89,6 +89,8 @@ export const useLocalStorage = (
         setDataAll("characters", data);
       };
       makeCall();
+    } else {
+      updateState();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
