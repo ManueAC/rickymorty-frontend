@@ -7,20 +7,14 @@ import {
   FormInputBase,
   FormSelectBase,
 } from "@/shared/components/input/FormInputBase";
-import { Select } from "@/shared/components/select/Select";
-import { useDialog } from "@/store/store";
 import { useCharacterFilterForm } from "../characters-hooks";
-import {
-  CharacterFilterSchemaType,
-  CharacterSchemaType,
-} from "../characters-types";
+import { CharacterFilterSchemaType } from "../characters-types";
 import { Form } from "@/components/ui/form";
 import { API_ENTITY_ENUM, fetchAPI } from "@/shared/hooks/api";
 import { useLocalStorage } from "@/shared/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
 
 export const CharacterFilters = (): JSX.Element | null => {
-  const dialog = useDialog();
   const { toast } = useToast();
   const { setDataAll, refresh } = useLocalStorage("characters");
   const form = useCharacterFilterForm();
@@ -71,22 +65,6 @@ export const CharacterFilters = (): JSX.Element | null => {
             form={form}
             options={speciesOptions}
           />
-          {/* <FormSelectBase
-            entity="Name"
-            control={control}
-            label={"Name"}
-            name={"name"}
-            form={form}
-            options={statusOptions}
-          /> */}
-          {/* <FormSelectBase
-            entity="image"
-            control={control}
-            label={"image"}
-            name={"image"}
-            form={form}
-            options={statusOptions}
-          /> */}
           <Button type="submit" className="ml-4 mb-6">
             Apply
           </Button>

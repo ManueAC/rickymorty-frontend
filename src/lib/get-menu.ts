@@ -1,5 +1,4 @@
 import {
-  LogInIcon,
   LucideIcon,
   PersonStanding,
   Presentation,

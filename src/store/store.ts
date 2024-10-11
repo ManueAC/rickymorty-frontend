@@ -41,7 +41,7 @@ interface AppActions {
     data: CharacterType[],
     info: AppStorage["characters"]["info"]
   ) => void;
-  saveUser: (data: AppStorage["currentUser"]) => void
+  saveUser: (data: AppStorage["currentUser"]) => void;
 }
 const initialState: AppStorage["characters"] = {
   info: {
@@ -69,12 +69,11 @@ export const useStore = create<AppStorage & AppActions>((set, get) => ({
       },
     });
   },
-  addCharacter: (data: CharacterType) => {
-    const find = get().characters.results.find((char) => char.id);
+  addCharacter: () => {
     return set({});
   },
 
-  updateCharacter: (data: CharacterType, id?: number) => {
+  updateCharacter: (data: CharacterType) => {
     const find = get().characters.results.find((char) => char.id === data.id);
     if (find)
       set((state) => {
@@ -104,7 +103,7 @@ export const useStore = create<AppStorage & AppActions>((set, get) => ({
     });
   },
 
-  addEpisode: (data: EpisodeType) => {},
+  addEpisode: () => {},
 }));
 
 // ========= Dialog managers
@@ -120,7 +119,7 @@ export type DialogStoreActions = {
 };
 
 export const useDialog = create<DialogStoreType & DialogStoreActions>(
-  (set, get) => ({
+  (set) => ({
     openSyncDialog: false,
     openCreateCharacterDialog: false,
     openCharacterFilters: false,

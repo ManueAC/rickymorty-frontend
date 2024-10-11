@@ -10,7 +10,7 @@ export const ButtonClient = ({
   return (
     <span
       className="w-full"
-      onClick={(e) => action()}
+      onClick={() => action()}
     >
       {children}
     </span>

@@ -1,4 +1,3 @@
-import { API_URL } from "@/constants";
 import { toast } from "@/hooks/use-toast";
 export enum API_ENTITY_ENUM {
   character = "character",
@@ -8,7 +7,6 @@ export const fetchAPI = async (
   type: API_ENTITY_ENUM,
   filters?: Record<string, string>
 ) => {
-  //   const api = `${API_URL}/${type}`;
   const api = `https://rickandmortyapi.com/api/${type}`;
   let url = api;
   if (filters) {
@@ -26,7 +24,7 @@ export const fetchAPI = async (
       method: "GET",
     })
       .then((data) => data.json())
-      .catch((error) => {
+      .catch(() => {
         toast({
           title: "ERR",
         });
@@ -34,7 +32,7 @@ export const fetchAPI = async (
     response = res;
   } catch (error) {
     toast({
-      title: "ERR",
+      title: `ERR: ${error}`,
       description: "It's broken",
     });
   }

@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -16,7 +15,7 @@ import Link from "next/link";
 interface CreateUserModalProps {
   isOpen?: boolean;
 }
-export const CreateUserModal: FC<CreateUserModalProps> = ({ isOpen }) => {
+export const CreateUserModal: FC<CreateUserModalProps> = () => {
   const path = usePathname();
   const params = useSearchParams();
   const dialog = useDialog();

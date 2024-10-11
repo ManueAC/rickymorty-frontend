@@ -47,7 +47,7 @@ export const TableOptions: FC<TableOptionsProps> = ({ options }) => {
                 key={key}
                 onClick={() => {
                   router.push(`${pathname}?id=${data.id}`);
-                  const t = setTimeout(() => {
+                  setTimeout(() => {
                     handleDialog[k]();
                   }, 300);
                 }}
