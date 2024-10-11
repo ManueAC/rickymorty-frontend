@@ -79,16 +79,15 @@ export const useLocalStorage = (
   useEffect(() => {
     const previous = JSON.parse(String(localStorage.getItem(String(dataName))));
     const isDataAvailable = previous?.results?.length > 0;
-    console.log("====================================");
-    console.log("INTITAL SETTING");
-    console.log("INTITAL PREV DATA ?", previous?.results?.length > 0);
-    console.log("====================================");
+
     if (!isDataAvailable) {
       const makeCall = async () => {
         const data = await fetchAPI(API_ENTITY_ENUM.character);
         setDataAll("characters", data);
       };
       makeCall();
+    } else {
+      updateState();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
