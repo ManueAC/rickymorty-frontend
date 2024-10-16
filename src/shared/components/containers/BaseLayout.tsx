@@ -10,8 +10,6 @@ type LayoutAction = {
   label: string;
   color?: string;
   query?: string;
-
-  action: (id: Record<string, string>) => void;
 };
 interface BaseLayoutProps {
   title: string;
@@ -29,6 +27,8 @@ export const BaseLayout: FC<BaseLayoutProps> = ({
     openSyncDialog: dialog.handleSyncDialog,
     openCreateCharacterDialog: dialog.handleCreateCharacterDialog,
     openCharacterFilters: dialog.handleCharacterFilterDialog,
+    openCreateEpisodeDialog: dialog.handleCreateEpisodeDialog,
+    openDeleteEpisodeDialog: dialog.handleDeleteEpisodeDialog,
   };
   const layoutButtons = (
     <Box className="flex gap-3">

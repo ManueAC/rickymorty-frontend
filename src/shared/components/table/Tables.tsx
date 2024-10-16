@@ -59,7 +59,7 @@ export function Table({ footerDescription, head = [], data = [] }: TableProps) {
             // eslint-disable-next-line
             const i = v as Array<Record<string, any>>;
             let content = v;
-            if (k === "id") return;
+            // if (k === "id") return;
             if (k === "image") {
               content = (
                 <Avatar>

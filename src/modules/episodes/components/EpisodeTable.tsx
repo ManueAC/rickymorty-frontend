@@ -1,36 +1,36 @@
 "use client";
-import { Table } from "@/shared/components/table/Tables";
-import { CharacterType, useStore } from "@/store/store";
-import { Box } from "@/shared/components/containers/Box";
+
 import { useState } from "react";
+// import {  } from "luxon";
+
+import { Box } from "@/shared/components/containers/Box";
 import Paginator from "@/shared/components/pagination/Paginator";
+import { TableLoader } from "@/shared/components/table/TableLoader";
+import { Table } from "@/shared/components/table/Tables";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { API_ENTITY_ENUM, fetchAPI } from "@/shared/hooks/api";
 import { useLocalStorage } from "@/shared/hooks/use-local-storage";
-import { toast } from "@/hooks/use-toast";
-import { TableLoader } from "@/shared/components/table/TableLoader";
+import { useToast } from "@/hooks/use-toast";
+import { EpisodeType, useStore } from "@/store/store";
+import { DateTime } from "luxon";
 
-export const CharactersTable = (): JSX.Element => {
+export const EpisodesTable = (): JSX.Element => {
   const store = useStore();
-
+  const router = useRouter();
   const pathname = usePathname();
-
-  const { setDataAll, refresh } = useLocalStorage(API_ENTITY_ENUM.character);
-
   const id = useSearchParams().get("id");
 
-  const router = useRouter();
-
   const [loading, setLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const { setDataAll, refresh } = useLocalStorage(API_ENTITY_ENUM.episode);
 
-  const pagInfo = store?.characters?.info?.pages;
+  const totalPages = store?.episodes?.info?.pages;
 
   const onSubmit = async (page: number) => {
     setLoading(true);
     const data = await fetchAPI(
-      API_ENTITY_ENUM.character,
+      API_ENTITY_ENUM.episode,
       page
         ? {
             page: String(page),
@@ -38,12 +38,9 @@ export const CharactersTable = (): JSX.Element => {
         : undefined
     );
 
-    setDataAll("characters", data);
+    setDataAll("episodes", data);
     refresh();
-    toast({
-      title: "Pagination",
-      description: "Completed",
-    });
+
     setLoading(false);
   };
 
@@ -54,35 +51,36 @@ export const CharactersTable = (): JSX.Element => {
   };
 
   const mapHeadLabels = [
-    "Avatar",
-    "Name",
-    "Type",
-    "Gender",
+    "Episode Nmb.",
+    "Title",
+    "Air date",
+    "Created",
+    "Characters",
     "Status",
     "Actions",
   ].map((label) => ({
     label: label,
   }));
 
-  const characters = store.characters.results;
+  const episodes = store?.episodes?.results;
 
-  const mapBodyRow: CharacterType[] =
-    characters?.length > 0
-      ? characters?.map((char) => ({
-          id: char?.id,
-          image: char?.image,
-          name: char?.name,
-          species: char?.species,
-          gender: char?.gender,
-          status: char?.status,
+  const mapBodyRow /* Partial<EpisodeType>[] */ =
+    episodes?.length > 0
+      ? episodes?.map((episode: EpisodeType) => ({
+          id: episode?.id,
+          name: episode?.name,
+          airDate: episode?.air_date,
+          created: DateTime.fromISO(episode.created).toFormat("yyyy LLL dd"),
+          characters: episode?.characters?.length,
+          status: episode?.status,
           actions: [
             {
               label: "edit",
-              query: "openCreateCharacterDialog",
+              query: "openCreateEpisodeDialog",
             },
             {
               label: "delete",
-              query: "openDeleteCharDialog",
+              query: "openDeleteEpisodeDialog",
             },
           ],
         }))
@@ -96,14 +94,16 @@ export const CharactersTable = (): JSX.Element => {
             head={mapHeadLabels}
             data={mapBodyRow}
             loading={loading}
-            footerDescription="A list of your characters invoices."
+            footerDescription="A list of your episodes."
           />
         </Box>
+
         {loading && <TableLoader />}
       </Box>
+
       <Paginator
         currentPage={currentPage}
-        totalPages={pagInfo}
+        totalPages={totalPages}
         onPageChange={handlePageChange}
         showPreviousNext={true}
       />

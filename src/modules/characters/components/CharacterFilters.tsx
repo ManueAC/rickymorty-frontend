@@ -16,7 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export const CharacterFilters = (): JSX.Element | null => {
   const { toast } = useToast();
-  const { setDataAll, refresh } = useLocalStorage("characters");
+  const { setDataAll, refresh } = useLocalStorage(API_ENTITY_ENUM.character);
   const form = useCharacterFilterForm();
   const control = form.control;
 

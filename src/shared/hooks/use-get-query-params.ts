@@ -49,9 +49,7 @@ export const useGetQueryParams = (
 
   toIterate?.map((queryKey) => {
     const available = params.get(queryKey);
-    console.log("====================================");
-    console.log("available", available);
-    console.log("====================================");
+
     return (paramsObj = {
       ...paramsObj,
       //   [queryKey]: params.get(queryKey),

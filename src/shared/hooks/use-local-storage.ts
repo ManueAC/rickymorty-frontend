@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { API_ENTITY_ENUM, fetchAPI } from "./api";
 
 export const useLocalStorage = (
-  dataName?: string
+  dataName: API_ENTITY_ENUM
 ): {
   refresh: () => void;
   updateData: (key: string, id: number, data: Record<string, unknown>) => void;
@@ -19,11 +19,17 @@ export const useLocalStorage = (
   const setToken = (key: string, data: string) => {
     localStorage.setItem(key, data);
   };
+  const entityOnLocalStorage = `${dataName}s`;
 
   const updateState = () => {
-    const d = JSON.parse(String(localStorage.getItem(String(dataName))));
+    const d = JSON.parse(String(localStorage.getItem(entityOnLocalStorage)));
 
-    store.addCharacterBulk(d?.results, d?.info);
+    // actions[dataName](d?.results, d?.info);
+    if (dataName === API_ENTITY_ENUM.character) {
+      store.addCharacterBulk(d?.results, d?.info);
+    } else {
+      store.addEpisodeBulk(d?.results, d?.info);
+    }
   };
 
   const setDataAll = (key: string, data?: Record<string, unknown>) => {
@@ -32,7 +38,9 @@ export const useLocalStorage = (
   };
 
   const removeData = (key: string, id: number) => {
-    const previous = JSON.parse(String(localStorage.getItem(String(dataName))));
+    const previous = JSON.parse(
+      String(localStorage.getItem(entityOnLocalStorage))
+    );
     const e = previous.results.filter((pr: CharacterType) => pr?.id !== id);
 
     localStorage.setItem(
@@ -50,7 +58,9 @@ export const useLocalStorage = (
     id: number,
     data: Record<string, unknown>
   ) => {
-    const previous = JSON.parse(String(localStorage.getItem(String(dataName))));
+    const previous = JSON.parse(
+      String(localStorage.getItem(entityOnLocalStorage))
+    );
 
     const e = previous.results.filter((pr: CharacterType) => pr?.id !== id);
     localStorage.setItem(
@@ -63,7 +73,9 @@ export const useLocalStorage = (
     updateState();
   };
   const setData = (key: string, data?: Record<string, unknown>) => {
-    const previous = JSON.parse(String(localStorage.getItem(String(dataName))));
+    const previous = JSON.parse(
+      String(localStorage.getItem(entityOnLocalStorage))
+    );
 
     localStorage.setItem(
       key,
@@ -77,13 +89,18 @@ export const useLocalStorage = (
   };
 
   useEffect(() => {
-    const previous = JSON.parse(String(localStorage.getItem(String(dataName))));
+    const previous = JSON.parse(
+      String(localStorage.getItem(entityOnLocalStorage))
+    );
+
     const isDataAvailable = previous?.results?.length > 0;
 
     if (!isDataAvailable) {
       const makeCall = async () => {
-        const data = await fetchAPI(API_ENTITY_ENUM.character);
-        setDataAll("characters", data);
+        // const data = await fetchAPI(API_ENTITY_ENUM.character);
+        const data = await fetchAPI(dataName);
+        // if (dataName === API_ENTITY_ENUM.character)
+        setDataAll(entityOnLocalStorage, data);
       };
       makeCall();
     } else {
@@ -93,7 +110,7 @@ export const useLocalStorage = (
   }, []);
 
   const refresh = () => {
-    const d = JSON.parse(String(localStorage.getItem(String(dataName))));
+    const d = JSON.parse(String(localStorage.getItem(entityOnLocalStorage)));
     setStorage(d);
   };
 
