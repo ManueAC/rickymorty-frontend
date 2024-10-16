@@ -13,8 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Control, FieldValues, Path, UseFormReturn } from "react-hook-form";
+import {
+  Control,
+  FieldValues,
+  Path,
+  useController,
+  UseFormReturn,
+} from "react-hook-form";
 import { SelectOption } from "../select/Select";
+import MultipleSelector, { Option } from "./MultiSelect";
+import { useState } from "react";
 
 interface BaseFormProps<T extends FieldValues> {
   label: string;
@@ -68,7 +76,9 @@ export function FormInputBase<T extends FieldValues>({
 interface FormSelectBase<T extends FieldValues> extends BaseFormProps<T> {
   options: SelectOption[];
   showComp?: boolean;
+  isMultiSelect?: boolean;
   valueAsPh?: boolean;
+  disabled?: boolean;
 }
 export function FormSelectBase<T extends FieldValues>({
   label,
@@ -77,9 +87,18 @@ export function FormSelectBase<T extends FieldValues>({
   placeholder,
   name,
   showComp = true,
+  isMultiSelect = false,
+  disabled = false,
   valueAsPh,
   options,
 }: FormSelectBase<T>) {
+  const [multiSelection, setMultiSelection] = useState<Option[]>([]);
+
+  const set = useController({
+    name,
+    control,
+  });
+
   const ph =
     name && entity ? `Select a ${name}` : placeholder ? placeholder : "";
 
@@ -95,28 +114,47 @@ export function FormSelectBase<T extends FieldValues>({
                 {label}
               </FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field?.onChange}
-                  defaultValue={field?.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      {showComp && (
-                        <SelectValue
-                          defaultValue={field?.value}
-                          placeholder={valueAsPh ? field?.value : ph}
-                        />
-                      )}
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {options.map(({ label, value }, idx) => (
-                      <SelectItem key={idx} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {!isMultiSelect ? (
+                  <Select
+                    onValueChange={field?.onChange}
+                    defaultValue={field?.value}
+                    disabled={disabled}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        {showComp && (
+                          <SelectValue
+                            defaultValue={field?.value}
+                            placeholder={valueAsPh ? field?.value : ph}
+                          />
+                        )}
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {options.map(({ label, value }, idx) => (
+                        <SelectItem key={idx} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <MultipleSelector
+                    defaultOptions={options}
+                    value={multiSelection}
+                    disabled={disabled}
+                    onChange={(e) => {
+                      setMultiSelection(e);
+                      set.field.onChange(e.map((v) => v.value));
+                    }}
+                    placeholder="Select frameworks you like..."
+                    emptyIndicator={
+                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                        no results found.
+                      </p>
+                    }
+                  />
+                )}
               </FormControl>
               <FormMessage />
             </FormItem>

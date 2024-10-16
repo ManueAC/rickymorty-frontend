@@ -30,7 +30,7 @@ export type ApiCharacterResponse = {
   results: Record<string, any>[];
 };
 
-export const DeleteCharactersModal = (): JSX.Element => {
+export const DeleteEpisodeModal = (): JSX.Element => {
   const dialog = useDialog((state) => state);
   const params = useSearchParams();
   const query = useGetQueryParams();
@@ -39,7 +39,7 @@ export const DeleteCharactersModal = (): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id: NewId, ...rest } = qry;
 
-  const { removeData } = useLocalStorage(API_ENTITY_ENUM.character);
+  const { removeData } = useLocalStorage(API_ENTITY_ENUM.episode);
 
   const path = usePathname();
 
@@ -47,22 +47,20 @@ export const DeleteCharactersModal = (): JSX.Element => {
 
   const onSubmit = () => {
     if (id) {
-      removeData("characters", id);
+      removeData("episodes", id);
     }
     toast({
-      title: "Delete character",
+      title: "Delete episode",
       description: "Success",
     });
-    dialog.handleCharDeleteDialog();
+    dialog.handleDeleteEpisodeDialog();
   };
 
   return (
-    <Dialog open={dialog.openDeleteCharacter}>
+    <Dialog open={dialog.openDeleteEpisode}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-4 text-center">
-            Delete character
-          </DialogTitle>
+          <DialogTitle className="mb-4 text-center">Delete episode</DialogTitle>
           <DialogDescription className="text-center">
             Are you sure you want to delete?
           </DialogDescription>
@@ -86,7 +84,7 @@ export const DeleteCharactersModal = (): JSX.Element => {
                   query: qry,
                 }}
                 onClick={() => {
-                  dialog.handleCharDeleteDialog();
+                  dialog.handleDeleteEpisodeDialog();
                 }}
               >
                 Cancel

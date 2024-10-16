@@ -17,10 +17,6 @@ export type CharType = {
 };
 
 export const CharactersView = () => {
-  async function openCreateChar() {
-    "use server";
-  }
-
   return (
     <Dialog>
       <BaseLayout
@@ -30,7 +26,6 @@ export const CharactersView = () => {
             label: "Create",
             color: "green-700",
             query: "openCreateCharacterDialog",
-            action: openCreateChar,
           },
         ]}
       >
