@@ -1,36 +1,37 @@
 "use client";
-import { Form } from "@/components/ui/form";
+import Link from "next/link";
+import { FC, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { capitalize, random } from "lodash";
 
-import { useCharacterForm } from "@/modules/characters/characters-hooks";
-import { CharacterSchemaType } from "@/modules/characters/characters-types";
+import { Form } from "@/components/ui/form";
 import {
   FormInputBase,
   FormSelectBase,
 } from "../../../shared/components/input/FormInputBase";
 import { Button } from "@/components/ui/button";
-import { genderOptions, speciesOptions, statusOptions } from "@/constants";
+import { statusOptions } from "@/constants";
 import { useLocalStorage } from "@/shared/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
-import { capitalize, random } from "lodash";
-import { FC, useEffect, useState } from "react";
 import { useGetStorageItem } from "@/shared/hooks/storage-utils";
-import { CharacterType, useDialog } from "@/store/store";
+import { EpisodeType, useDialog } from "@/store/store";
 import { Box } from "@/shared/components/containers/Box";
 import { DialogClose } from "@/components/ui/dialog";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import {
   objectToQueryParams,
   useGetQueryParams,
 } from "@/shared/hooks/use-get-query-params";
 import { API_ENTITY_ENUM } from "@/shared/hooks/api";
+import { useEpisodeForm } from "../episodes-hooks";
+import { EpisodeSchemaType } from "../episodes-types";
+import { DateTime } from "luxon";
 
-interface CharacterFormProps {
-  characterId?: number;
+interface EpisodeFormProps {
+  episodeId?: number;
 }
 
-export const CharacterForm: FC<CharacterFormProps> = ({
-  characterId,
+export const EpisodeForm: FC<EpisodeFormProps> = ({
+  episodeId,
 }): JSX.Element => {
   const path = usePathname();
   const router = useRouter();
@@ -41,27 +42,27 @@ export const CharacterForm: FC<CharacterFormProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id: NewId, ...rest } = qry;
 
-  const isUpdate = !!characterId;
+  const isUpdate = !!episodeId;
   const [showComp, setShowComp] = useState<boolean>(false);
 
   const { toast } = useToast();
-  const { setData, updateData } = useLocalStorage(API_ENTITY_ENUM.character);
+  const { setData, updateData } = useLocalStorage(API_ENTITY_ENUM.episode);
 
-  const charData = useGetStorageItem(
-    API_ENTITY_ENUM.character,
-    characterId
-  ) as CharacterType[];
+  const episodeData = useGetStorageItem(
+    API_ENTITY_ENUM.episode,
+    episodeId
+  ) as EpisodeType[];
 
-  const form = useCharacterForm();
+  const form = useEpisodeForm();
 
   useEffect(() => {
     const clear = setTimeout(() => {
       form.reset({
-        name: charData?.[0]?.name,
-        image: charData?.[0]?.image,
-        species: charData?.[0]?.species,
-        status: charData?.[0]?.status,
-        gender: charData?.[0]?.gender,
+        name: episodeData?.[0]?.name,
+        status: episodeData?.[0]?.status,
+        air_date: episodeData?.[0]?.air_date,
+        created: episodeData?.[0]?.created,
+        episode: episodeData?.[0]?.episode,
       });
 
       setShowComp(true);
@@ -70,28 +71,31 @@ export const CharacterForm: FC<CharacterFormProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onSubmit = (values: CharacterSchemaType) => {
-    if (isUpdate) {
-      updateData("characters", characterId, {
-        id: characterId,
-        ...values,
-      });
-    } else {
-      setData("characters", {
-        ...values,
-        species: capitalize(values.species),
-        status: capitalize(values.status),
-        gender: capitalize(values.gender),
-        id: random(5000),
-      });
-    }
+  const onSubmit = (values: EpisodeSchemaType) => {
 
     if (isUpdate) {
+      updateData("episodes", episodeId, {
+        id: episodeId,
+        ...values,
+      });
+
       toast({
         title: "Update character",
         description: "Success",
       });
     } else {
+      setData("episodes", {
+        ...values,
+        status: capitalize(values.status),
+        id: random(5000),
+        created: DateTime.now().toISO(),
+        air_date: DateTime.now()
+          .plus({
+            days: 2,
+          })
+          .toISO(),
+      });
+
       toast({
         title: "Create character",
         description: "Success",
@@ -104,10 +108,11 @@ export const CharacterForm: FC<CharacterFormProps> = ({
         ...(isUpdate ? rest : qry),
       })}`
     );
-    dialog.handleCreateCharacterDialog();
+    dialog.handleCreateEpisodeDialog();
   };
 
   const buttonText = isUpdate ? "Update" : "Create";
+
   const control = form.control;
 
   return (
@@ -122,21 +127,26 @@ export const CharacterForm: FC<CharacterFormProps> = ({
         />
         <FormInputBase
           control={control}
-          entity="Character"
-          label={"Image"}
-          name={"image"}
+          entity="Episode"
+          label={"Episode"}
+          name={"episode"}
           form={form}
         />
-        <FormSelectBase
-          showComp={showComp}
-          entity="Gender"
+        <FormInputBase
           control={control}
-          label={"Gender"}
-          name={"gender"}
+          entity="Air date"
+          label={"Air date"}
+          name={"air_date"}
           form={form}
-          valueAsPh={isUpdate}
-          options={genderOptions}
         />
+        <FormInputBase
+          control={control}
+          entity="created"
+          label={"created"}
+          name={"created"}
+          form={form}
+        />
+
         <FormSelectBase
           showComp={showComp}
           entity="Status"
@@ -148,24 +158,31 @@ export const CharacterForm: FC<CharacterFormProps> = ({
           options={statusOptions}
         />
         <FormSelectBase
-          showComp={showComp}
-          entity="Specie"
           control={control}
-          label={"Species"}
-          name={"species"}
+          entity="Characters"
+          label={"Characters"}
+          name={"characters"}
           form={form}
           valueAsPh={isUpdate}
-          options={speciesOptions}
+          isMultiSelect
+          options={[
+            {
+              label: "Rick",
+              value: "1",
+            },
+            {
+              label: "Morty",
+              value: "2",
+            },
+            {
+              label: "Summer",
+              value: "3",
+            },
+          ]}
         />
+
         <Box className="flex justify-center gap-4 w-full">
           <Button className="bg-lime-700" type="submit">
-            {/* <Link
-              href={{
-                pathname: path,
-                query: rest,
-              }}
-            >
-            </Link> */}
             {buttonText}
           </Button>
           <DialogClose>
@@ -177,7 +194,7 @@ export const CharacterForm: FC<CharacterFormProps> = ({
                   query: qry,
                 }}
                 onClick={() => {
-                  dialog.handleCreateCharacterDialog();
+                  dialog.handleCreateEpisodeDialog();
                 }}
               >
                 Cancel

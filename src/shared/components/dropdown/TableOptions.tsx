@@ -38,6 +38,9 @@ export const TableOptions: FC<TableOptionsProps> = ({ options }) => {
     openCreateCharacterDialog: dialog.handleCreateCharacterDialog,
     openCharacterFilters: dialog.handleCharacterFilterDialog,
     openDeleteCharDialog: dialog.handleCharDeleteDialog,
+
+    openDeleteEpisodeDialog: dialog.handleDeleteEpisodeDialog,
+    openCreateEpisodeDialog: dialog.handleCreateEpisodeDialog,
   };
   return (
     <DropdownMenu>

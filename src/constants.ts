@@ -42,4 +42,26 @@ export const genderOptions = [
   },
 ];
 
-export const API_URL = `${process.env.API_URL}` || '';
+export const seasonsOptions = Array.from(Array(5).keys())
+  .map((nb) => nb)
+  ?.map((seasonNumber) => ({
+    label: String(seasonNumber + 1),
+    value: String(seasonNumber + 1),
+  }));
+export const episodesOptions = (episodesQty: number) => {
+  return Array.from(Array(episodesQty).keys())
+    .map((nb) => nb)
+    ?.map((seasonNumber) => ({
+      label: String(seasonNumber + 1),
+      value: String(seasonNumber + 1),
+    }));
+};
+
+export const API_URL = `${process.env.API_URL}` || "";
+
+export const SERIE_SEASONS_COUNT = 5;
+
+export enum EPISODE_STATUS_ENUM {
+  ACTIVE = "ACTIVE",
+  CANCELLED = "CANCELLED",
+}

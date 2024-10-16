@@ -33,11 +33,11 @@ export const Layout: FC<LayoutProps> = ({ children }): JSX.Element => {
   let content = (
     <div className="flex h-screen">
       <Sidebar />
-      <div className="w-full">
+      <main className="w-full">
         <Topbar />
         <main className="w-full bg-popover p-8">{children}</main>
         <Toaster />
-      </div>
+      </main>
     </div>
   );
 
