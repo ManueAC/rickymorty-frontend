@@ -16,7 +16,7 @@ export const useEpisodeForm = (defValues?: EpisodeSchemaType) => {
   });
 };
 
-export const useEpisodeFilterForm = (defValues?: EpisodeFilterSchemaType) => {
+export const useEpisodeFilterForm = () => {
   return useForm<EpisodeFilterSchemaType>({
     resolver: zodResolver(episodeFilterSchema),
     defaultValues: {
